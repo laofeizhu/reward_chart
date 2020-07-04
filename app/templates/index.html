@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+
+{% block status %}
+<h2 id='status'>
+</h2>
+{% endblock %}
+
+{% block startable %}
+<table class='table'>
+  <tbody>
+    <tr>
+      <th scope='row'></th>
+      <td><div class='star-box'></div></td>
+    </tr>
+    <tr>
+      <th scope='row'></th>
+      <td><div class='star-box'></div></td>
+    </tr>
+    <tr>
+      <th scope='row'></th>
+      <td><div class='star-box'></div></td>
+    </tr>
+    <tr>
+      <th scope='row'></th>
+      <td><div class='star-box'></div></td>
+    </tr>
+    <tr>
+      <th scope='row'></th>
+      <td><div class='star-box'></div></td>
+    </tr>
+    <tr>
+      <th scope='row'></th>
+      <td><div class='star-box'></div></td>
+    </tr>
+    <tr class='bg-primary'>
+      <th scope='row'></th>
+      <td><div class='star-box'></div></td>
+    </tr>
+  </tbody>
+</table>
+{% endblock %}
+
+
+{% block scripts %}
+{{ super() }}
+<script>
+  var DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+  var rowHeads = $('th[scope="row"]')
+  var oneDay = 24 * 3600 * 1000
+  var oneHour = 3600 * 1000
+  var oneMin = 60 * 1000
+  var oneSec = 1000
+
+  var now = new Date()
+  var nowSec = now.getTime()
+  var lastSundaySec
+  var stars
+  var starsLeft
+
+  function updateTime() {
+    lastSundaySec = nowSec - oneDay * now.getDay() - oneHour * now.getHours() - oneMin * now.getMinutes() - oneSec * now.getSeconds()
+    for (var i = 0; i < 7; ++i) {
+      var d = new Date(lastSundaySec + i * oneDay)
+      rowHeads[i].innerHTML = '(' + (d.getMonth() + 1) + '/' + d.getDate() + ') ' + DAYS[i]
+    }
+
+    $('tr').eq(now.getDay()).addClass('bg-primary')
+  }
+
+  // do a time update immediately
+  updateTime()
+
+  var starBox = $('.star-box').eq(now.getDay())
+
+  function getImage(filename, width) {
+    return $("<img src='/static/" + filename + "' width='" + width + "', height='auto'>")
+  }
+  function plotInStarBox(box, stars) {
+    box.empty()
+    for (var star of stars) {
+      var img
+      switch (star.reason) {
+        case 'brushteeth':
+          img = getImage('brushteeth.png', '100px')
+          break
+        case 'sharing':
+          img = getImage('sharing.png', '100px')
+          break
+        default:
+          img = getImage('star.png', '100px')
+      }
+      box.append(img)
+    }
+  }
+
+  function fromThisWeek(star) {
+    return star.timestamp > lastSundaySec
+  }
+
+
+  function plotStars(stars) {
+    var weeklyStars = []
+    for (var i = 0; i < 7; i++) {
+      weeklyStars.push([])
+    }
+    for (var star of stars) {
+      if (!fromThisWeek(star)) continue;
+      weeklyStars[new Date(star.timestamp).getDay()].push(star)
+    }
+    for (var i = 0; i < 7; i++) {
+      var box = $('.star-box').eq(i)
+      plotInStarBox(box, weeklyStars[i])
+    }
+  }
+
+  function updateStatus() {
+    var statusBlock = $('#status')
+    statusBlock.empty()
+    statusBlock.append(stars.length)
+    statusBlock.append(' X ')
+    statusBlock.append(getImage('star.png', '50px'))
+
+    statusBlock.append('<br>')
+    statusBlock.append(starsLeft)
+    statusBlock.append(' X ')
+    statusBlock.append(getImage('star.png', '50px'))
+    statusBlock.append('=>')
+    statusBlock.append(getImage('nintendoswitch.jpg', '100px'))
+  }
+
+  function updateStars() {
+      $.get($SCRIPT_ROOT + '/_get_stars?username=' + $USERNAME, function(data) {
+        stars = data
+        plotStars(stars)
+        starsLeft = 300 - stars.length
+        updateStatus()
+      })
+  }
+
+  updateStars()
+
+  socket.on('update star', function () {
+    updateStars()
+  })
+
+
+  setInterval(() => {
+      now = new Date()
+      nowSec = now.getTime()
+      updateTime()
+  }, 1000);
+</script>
+{% endblock %}

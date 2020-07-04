@@ -1,0 +1,39 @@
+{% extends 'bootstrap/base.html' %}
+
+{% block metas %}
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+<script type=text/javascript>
+  $USERNAME = '{{ username }}'
+  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+  var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+  socket.on('connect', function() {
+      console.log('socket connected')
+      socket.emit('my event', {
+          data: 'User Connected'
+      })
+  })
+</script>
+
+{% endblock %}
+
+{% block title %}
+    Reward Chart
+{% endblock %}
+
+{% block content %}    
+    {% block status %}{% endblock %}
+    {% block startable %}{% endblock %}
+    {% block console %}{% endblock %}
+{% endblock %}
+
+{% block styles %}
+	{{ super() }}
+{% endblock %}
