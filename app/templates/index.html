@@ -131,7 +131,12 @@
     statusBlock.append(getImage('nintendoswitch.jpg', '100px'))
   }
 
+  var totalStars = 0
+
   function updateStars() {
+    $.get($SCRIPT_ROOT + '/_get_stars_count?username=' + $USERNAME, function(count) {
+      if (count === totalStars) return
+      totalStars = count
       $.get($SCRIPT_ROOT + '/_get_stars?username=' + $USERNAME, function(data) {
         stars = data
         console.log(stars)
@@ -139,19 +144,18 @@
         starsLeft = 300 - stars.length
         updateStatus()
       })
+    })
   }
 
   updateStars()
-
-  socket.on('update star', function () {
-    updateStars()
-  })
-
 
   setInterval(() => {
       now = new Date()
       nowSec = now.getTime()
       updateTime()
-  }, 1000);
+  }, 5000);
+  setInterval(() => {
+      updateStars()
+  }, 500);
 </script>
 {% endblock %}

@@ -31,6 +31,8 @@ def init_app(app):
     mongo = PyMongo(app)
     mongo.init_app(app)
 
+def count(dbname):
+  return str(mongo.db[dbname].count())
 
 # [START list]
 def list(dbname):

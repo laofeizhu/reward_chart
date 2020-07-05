@@ -2,7 +2,7 @@ import json
 
 from datetime import datetime, timedelta
 
-from app import app, socketio, db, models
+from app import app, db, models
 from flask import render_template, jsonify, request
 
 @app.route('/')
@@ -20,9 +20,6 @@ def admin():
     return 'user name must be specified as ?username=xxx'
   return render_template('admin.html', username=username)
 
-def broadcast_star():
-  socketio.emit('update star')
-
 @app.route('/_add_star', methods=['GET', 'POST'])
 def add_star():
   model = db.get_model()
@@ -34,7 +31,6 @@ def add_star():
     app.logger.info('setting reason to ' + reason)
   s = models.Score(username=username, reason=reason)
   model.create(username, s.to_dict())
-  broadcast_star()
   return 'Star added'
 
 @app.route('/_reset_star', methods=['POST'])
@@ -44,7 +40,6 @@ def reset_star():
   if username is None:
     return 'Exception: user name not specified'
   model.reset(username)
-  broadcast_star()
   return 'Star reset'
 
 @app.route('/_get_stars', methods=['GET'])
@@ -55,3 +50,10 @@ def get_star():
   for star in stars:
     star.pop('_id', None)
   return jsonify(stars)
+
+@app.route('/_get_stars_count', methods=['GET'])
+def get_stars_count():
+  model = db.get_model()
+  username = request.args.get('username')
+  stars_count = model.count(username)
+  return stars_count
