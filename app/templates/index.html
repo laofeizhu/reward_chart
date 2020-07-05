@@ -116,32 +116,33 @@
     }
   }
 
+  var totalStars = 0
+
   function updateStatus() {
     var statusBlock = $('#status')
     statusBlock.empty()
-    statusBlock.append(stars.length)
-    statusBlock.append(' X ')
+    statusBlock.append(totalStars)
+    statusBlock.append(' / 300 ')
     statusBlock.append(getImage('star.png', '50px'))
 
     statusBlock.append('<br>')
-    statusBlock.append(starsLeft)
-    statusBlock.append(' X ')
-    statusBlock.append(getImage('star.png', '50px'))
-    statusBlock.append('=>')
+    var progress = $('<div class="progress"></div>')
+    var percentage = Math.floor(totalStars/3)
+    var progressBar = $('<div class="progress-bar" role="progressbar" style="width: ' + percentage + '%;" aria-valuenow="' + percentage + '" aria-valuemin="0" aria-valuemax="100">' + percentage + '%</div>')
+    progress.append(progressBar)
+    statusBlock.append(progress)
     statusBlock.append(getImage('nintendoswitch.jpg', '100px'))
   }
-
-  var totalStars = 0
 
   function updateStars() {
     $.get($SCRIPT_ROOT + '/_get_stars_count?username=' + $USERNAME, function(count) {
       if (count === totalStars) return
       totalStars = count
+      starsLeft = 300 - totalStars
       $.get($SCRIPT_ROOT + '/_get_stars?username=' + $USERNAME, function(data) {
         stars = data
         console.log(stars)
         plotStars(stars)
-        starsLeft = 300 - stars.length
         updateStatus()
       })
     })

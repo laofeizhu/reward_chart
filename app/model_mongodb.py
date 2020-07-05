@@ -1,3 +1,5 @@
+import time
+
 from bson.objectid import ObjectId
 from flask_pymongo import PyMongo
 
@@ -35,8 +37,9 @@ def count(dbname):
   return str(mongo.db[dbname].count())
 
 # [START list]
-def list(dbname):
-  results = mongo.db[dbname].find()
+def list(dbname, days=7):
+  """retrieve the scores within days back."""
+  results = mongo.db[dbname].find({'timestamp': {'$gt': int(time.time()) - 7 * 24 * 3600 * 1000}})
   scores = builtin_list(map(from_mongo, results))
   return scores
 # [END list]
