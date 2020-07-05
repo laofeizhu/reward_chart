@@ -89,6 +89,9 @@
         case 'sharing':
           img = getImage('sharing.png', '100px')
           break
+        case 'study':
+          img = getImage('study.png', '100px')
+          break
         default:
           img = getImage('star.png', '100px')
       }
@@ -131,7 +134,7 @@
     var progressBar = $('<div class="progress-bar" role="progressbar" style="width: ' + percentage + '%;" aria-valuenow="' + percentage + '" aria-valuemin="0" aria-valuemax="100">' + percentage + '%</div>')
     progress.append(progressBar)
     statusBlock.append(progress)
-    statusBlock.append(getImage('nintendoswitch.jpg', '100px'))
+    statusBlock.append(getImage('nintendoswitch.jpg', '200px'))
   }
 
   function updateStars() {

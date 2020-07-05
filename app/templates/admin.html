@@ -10,6 +10,9 @@
 <button id='add-sharing-star'>ADD SHARING STAR</button>
 <br>
 <br>
+<button id='add-study-star'>ADD STUDY STAR</button>
+<br>
+<br>
 <button id='reset-star'>RESET</button>
 {% endblock %}
 
@@ -25,6 +28,9 @@ $(function() {
 	})
 	$('#add-sharing-star').bind('click', function() {
 		$.post($SCRIPT_ROOT + '/_add_star?reason=sharing&username=' + $USERNAME)
+	})
+	$('#add-study-star').bind('click', function() {
+		$.post($SCRIPT_ROOT + '/_add_star?reason=study&username=' + $USERNAME)
 	})
 	$('#reset-star').bind('click', function() {
 		$.post($SCRIPT_ROOT + '/_reset_star?username=' + $USERNAME)

@@ -11,6 +11,20 @@
 <script type=text/javascript>
   $USERNAME = '{{ username }}'
   $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+  var kidName
+  switch ($USERNAME) {
+	  case 'linli':
+		  kidName = 'Lin Li';
+		  break;
+	  case 'ethanli':
+		  kidName = 'Ethan Li';
+		  break;
+	  case 'rebecca':
+		  kidName = 'Rebecca Li';
+		  break;
+  }
+
+  $('#kid-name').html(kidName + "'s star chart")
 </script>
 
 {% endblock %}
@@ -20,6 +34,7 @@
 {% endblock %}
 
 {% block content %}    
+    <h1 id='kid-name'></h1>
     {% block status %}{% endblock %}
     {% block startable %}{% endblock %}
     {% block console %}{% endblock %}
