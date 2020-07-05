@@ -12,7 +12,7 @@
   $USERNAME = '{{ username }}'
   $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
   function getImage(filename, width) {
-    return $("<img src='/static/" + filename + "' width='" + width + "', height='auto'>")
+    return $("<img src='/static/" + filename + "' width='" + width + "', height='auto', class='card-img-top rounded'>")
   }
   var kidName
   var avatar
@@ -31,7 +31,7 @@
 		  break;
   }
 
-  $('#kid-name').html(kidName + "'s star chart")
+  $('#kid-name').html(kidName)
   $('#avatar').append(avatar)
 
 </script>
@@ -43,9 +43,19 @@
 {% endblock %}
 
 {% block content %}    
-    <h1 id='kid-name'></h1>
-    <div id='avatar'></div>
-    {% block status %}{% endblock %}
+  <div class='row'>
+      <div class='col-sm-4'>
+        <div class='card text-center' id='avatar'>
+          <div>
+            <h2 class='card-title', id='kid-name'></h2>
+          </div>
+        </div>        
+      </div>
+      <div class='col-sm-7'>
+        {% block status %}{% endblock %}
+      </div>
+  </div>
+
     {% block startable %}{% endblock %}
     {% block console %}{% endblock %}
 {% endblock %}

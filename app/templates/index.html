@@ -126,12 +126,12 @@
     statusBlock.append(getImage('star.png', '50px'))
 
     statusBlock.append('<br>')
-    var progress = $('<div class="progress"></div>')
+    var progress = $('<div class="progress" style="height: 5vh;"></div>')
     var percentage = Math.floor(totalStars/3)
     var progressBar = $('<div class="progress-bar" role="progressbar" style="width: ' + percentage + '%;" aria-valuenow="' + percentage + '" aria-valuemin="0" aria-valuemax="100">' + percentage + '%</div>')
     progress.append(progressBar)
     statusBlock.append(progress)
-    statusBlock.append(getImage('nintendoswitch.jpg', '200px'))
+    statusBlock.append(getImage('nintendoswitch.jpg', '70%'))
   }
 
   function updateStars() {
