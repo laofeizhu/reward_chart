@@ -12,7 +12,8 @@
 <script type=text/javascript>
   $USERNAME = '{{ username }}'
   $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
-  var socket = io.connect('http://' + document.domain + ':' + location.port);
+  var protocol = window.location.protocol
+  var socket = io.connect(protocol + '//' + document.domain + ':' + location.port);
 
   socket.on('connect', function() {
       console.log('socket connected')
