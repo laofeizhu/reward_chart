@@ -131,6 +131,7 @@
   function updateStars() {
       $.get($SCRIPT_ROOT + '/_get_stars?username=' + $USERNAME, function(data) {
         stars = data
+        console.log(stars)
         plotStars(stars)
         starsLeft = 300 - stars.length
         updateStatus()

@@ -30,7 +30,7 @@ $(function() {
 		$.post($SCRIPT_ROOT + '/_add_star?reason=sharing&username=' + $USERNAME)
 	})
 	$('#reset-star').bind('click', function() {
-		$.post($SCRIPT_ROOT + '/_reset_star&username=' + $USERNAME)
+		$.post($SCRIPT_ROOT + '/_reset_star?username=' + $USERNAME)
 	})
 })
 </script>

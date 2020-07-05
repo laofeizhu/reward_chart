@@ -2,9 +2,6 @@ import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config(object):
-    # ...
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        'sqlite:///' + os.path.join(basedir, 'app.db')
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+  MONGO_URI = 'mongodb+srv://kevin-li:almighty78@cluster0-m05c3.gcp.mongodb.net/reward_chart?retryWrites=true&w=majority'
 
-    SECRET_KEY = 'ethan_s_reward_chart'
+  SECRET_KEY = 'ethan_s_reward_chart'

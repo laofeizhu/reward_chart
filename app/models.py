@@ -1,16 +1,24 @@
-from app import db
-from datetime import datetime
+import time
 import uuid
 
 
-class Score(db.Model):
-  id = db.Column(db.String, primary_key=True, default=lambda: str(uuid.uuid1()), unique=True, nullable=False)
-  point = db.Column(db.Integer, index=True, default=1)
-  timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-  reason = db.Column(db.String, index=True)
-  username = db.Column(db.String, index=True)
+class Score(object):
+  """Score of a child"""
 
+  def __init__(self, id=uuid.uuid1(), timestamp=int(time.time()*1000), point=1, reason=None, username=None, redeemed=False):
+    self.id = id
+    self.timestamp = timestamp
+    self.point = point
+    self.reason = reason
+    self.username = username
+    self.redeemed = redeemed
 
-  def __repr__(self):
-    return '<Score User={} ID={} Point={} for ({}) @ {}>'.format(self.username, self.id, self.point, self.reason, self.timestamp)
-    
+  def to_dict(self):
+    return {
+        "id": self.id,
+        "timestamp": self.timestamp,
+        "point": self.point,
+        "reason": self.reason,
+        "username": self.username,
+        "redeemed": self.redeemed
+      }
