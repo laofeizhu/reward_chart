@@ -11,20 +11,29 @@
 <script type=text/javascript>
   $USERNAME = '{{ username }}'
   $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+  function getImage(filename, width) {
+    return $("<img src='/static/" + filename + "' width='" + width + "', height='auto'>")
+  }
   var kidName
+  var avatar
   switch ($USERNAME) {
 	  case 'linli':
 		  kidName = 'Lin Li';
+		  avatar = getImage('linli.jpg', 200)
 		  break;
 	  case 'ethanli':
 		  kidName = 'Ethan Li';
+		  avatar = getImage('ethanli.jpg', 200)
 		  break;
 	  case 'rebecca':
 		  kidName = 'Rebecca Li';
+		  avatar = getImage('ethanli.jpg', 200)
 		  break;
   }
 
   $('#kid-name').html(kidName + "'s star chart")
+  $('#avatar').append(avatar)
+
 </script>
 
 {% endblock %}
@@ -35,6 +44,7 @@
 
 {% block content %}    
     <h1 id='kid-name'></h1>
+    <div id='avatar'></div>
     {% block status %}{% endblock %}
     {% block startable %}{% endblock %}
     {% block console %}{% endblock %}

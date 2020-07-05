@@ -75,9 +75,6 @@
 
   var starBox = $('.star-box').eq(now.getDay())
 
-  function getImage(filename, width) {
-    return $("<img src='/static/" + filename + "' width='" + width + "', height='auto'>")
-  }
   function plotInStarBox(box, stars) {
     box.empty()
     for (var star of stars) {
