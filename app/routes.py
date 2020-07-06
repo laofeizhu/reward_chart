@@ -29,7 +29,8 @@ def add_star():
   reason = request.args.get('reason')
   if reason is not None:
     app.logger.info('setting reason to ' + reason)
-  s = models.Score(username=username, reason=reason)
+  timestamp = request.args.get('timestamp')
+  s = models.Score(username=username, reason=reason, timestamp=int(timestamp))
   model.create(username, s.to_dict())
   return 'Star added'
 
