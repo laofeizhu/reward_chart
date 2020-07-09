@@ -33,23 +33,23 @@ def init_app(app):
     mongo = PyMongo(app)
     mongo.init_app(app)
 
-def count(dbname):
-  return str(mongo.db[dbname].count())
+def count(collection_name):
+  return str(mongo.db[collection_name].count())
 
 # [START list]
-def list(dbname, days=7):
+def list(collection_name, days=7):
   """retrieve the scores within days back."""
-  results = mongo.db[dbname].find({'timestamp': {'$gt': int(time.time()) - 7 * 24 * 3600 * 1000}})
+  results = mongo.db[collection_name].find({'timestamp': {'$gt': int(time.time()) - 7 * 24 * 3600 * 1000}})
   scores = builtin_list(map(from_mongo, results))
   return scores
 # [END list]
 
 
 # [START create]
-def create(dbname, score):
-    result = mongo.db[dbname].insert_one(score)
+def create(collection_name, score):
+    result = mongo.db[collection_name].insert_one(score)
 # [END create]
 
 
-def reset(dbname):
-  mongo.db[dbname].drop()
+def reset(collection_name):
+  mongo.db[collection_name].drop()
