@@ -13,6 +13,9 @@
 <button id='add-study-star'>ADD STUDY STAR</button>
 <br>
 <br>
+<button id='add-sleep-star'>ADD SLEEP STAR</button>
+<br>
+<br>
 <button id='reset-star'>RESET</button>
 {% endblock %}
 
@@ -39,6 +42,9 @@ $(function() {
 	})
 	$('#add-study-star').bind('click', function() {
 		$.post(getAddStarUrl('study'))
+	})
+	$('#add-sleep-star').bind('click', function() {
+		$.post(getAddStarUrl('sleep'))
 	})
 	$('#reset-star').bind('click', function() {
 		$.post($SCRIPT_ROOT + '/_reset_star?username=' + $USERNAME)

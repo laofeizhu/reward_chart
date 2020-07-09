@@ -16,18 +16,26 @@
   }
   var kidName
   var avatar
+  var requiredStars
+  var prizeImage
   switch ($USERNAME) {
 	  case 'linli':
 		  kidName = 'Lin Li';
 		  avatar = getImage('linli.jpg', 200)
+      prizeImage = getImage('nintendoswitch.jpg', '50%')
+      requiredStars = 300
 		  break;
 	  case 'ethanli':
 		  kidName = 'Ethan Li';
 		  avatar = getImage('ethanli.jpg', 200)
+      prizeImage = getImage('legomario.jpeg', '50%')
+      requiredStars = 100
 		  break;
 	  case 'rebecca':
 		  kidName = 'Rebecca Li';
 		  avatar = getImage('ethanli.jpg', 200)
+      prizeImage = getImage('legomario.jpeg', '50%')
+      requiredStars = 100
 		  break;
   }
 
