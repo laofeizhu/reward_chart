@@ -1,0 +1,54 @@
+<nav class="navbar is-white topNav">
+  <div class="container">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="../">
+        <img src="{{ url_for('static', filename='star.png') }}" width="auto" height="auto">
+      </a>
+      <div class="navbar-burger burger" data-target="topNav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+    <div id="topNav" class="navbar-menu">
+      <div class="navbar-start">
+        <a class="navbar-item" href="cover.html">Home</a>
+      </div>
+      <div class="navbar-end">
+        <div class="navbar-item">
+          <div class="field is-grouped">
+            {% if g.user %}
+            <p class="control">
+              <a class="button is-small is-info is-outlined" href="{{ url_for('auth.logout') }}">
+                <span class="icon">
+                  <i class="fa fa-user"></i>
+                </span>
+                <span>Logout</span>
+              </a>
+            </p>
+            {% else %}
+            <p class="control">
+              <a class="button is-small" href="{{ url_for('auth.register') }}">
+                <span class="icon">
+                  <i class="fa fa-user-plus"></i>
+                </span>
+                <span>
+                  Register
+                </span>
+              </a>
+            </p>
+            <p class="control">
+              <a class="button is-small is-info is-outlined" href="{{ url_for('auth.login') }}">
+                <span class="icon">
+                  <i class="fa fa-user"></i>
+                </span>
+                <span>Login</span>
+              </a>
+            </p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

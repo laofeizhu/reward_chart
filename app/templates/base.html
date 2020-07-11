@@ -1,65 +1,20 @@
-{% extends 'bootstrap/base.html' %}
+<!doctype html>
 
-{% block metas %}
-<!-- Required meta tags -->
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-{% endblock %}
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reward Chart</title>
+  <link rel="shortcut icon" href="{{ url_for('static', filename='star.png') }}" type="image/x-icon">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
+  <!-- Bulma Version 0.8.2-->
+  <link rel="stylesheet" href="https://unpkg.com/bulma@0.8.2/css/bulma.min.css">
+</head>
 
-{% block scripts %}
-{{ super() }}
-<script type=text/javascript>
-  $USERNAME = '{{ username }}'
-  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
-  function getImage(filename, width) {
-    return $("<img src='/static/" + filename + "' width='" + width + "', height='auto', class='card-img-top rounded'>")
-  }
-  var kidName
-  var avatar
-  switch ($USERNAME) {
-	  case 'linli':
-		  kidName = 'Lin Li';
-		  avatar = getImage('linli.jpg', 200)
-		  break;
-	  case 'ethanli':
-		  kidName = 'Ethan Li';
-		  avatar = getImage('ethanli.jpg', 200)
-		  break;
-	  case 'rebecca':
-		  kidName = 'Rebecca Li';
-		  avatar = getImage('ethanli.jpg', 200)
-		  break;
-  }
+<body>
+  {% include "navbar.html" %}
 
-  $('#kid-name').html(kidName)
-  $('#avatar').append(avatar)
-
-</script>
-
-{% endblock %}
-
-{% block title %}
-    Reward Chart
-{% endblock %}
-
-{% block content %}    
-  <div class='row'>
-      <div class='col-sm-4'>
-        <div class='card text-center' id='avatar'>
-          <div>
-            <h2 class='card-title', id='kid-name'></h2>
-          </div>
-        </div>        
-      </div>
-      <div class='col-sm-7'>
-        {% block status %}{% endblock %}
-      </div>
-  </div>
-
-    {% block startable %}{% endblock %}
-    {% block console %}{% endblock %}
-{% endblock %}
-
-{% block styles %}
-	{{ super() }}
-{% endblock %}
+  {% block content %}{% endblock %}
+  
+</body>

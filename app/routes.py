@@ -3,15 +3,13 @@ import json
 from datetime import datetime, timedelta
 
 from app import app, db, models
-from flask import render_template, jsonify, request
+from app.forms import LoginForm
+from flask import render_template, jsonify, request, url_for, flash, redirect
 
 @app.route('/')
 @app.route('/index')
 def index():
-  username = request.args.get('username')
-  if username is None:
-    return 'user name must be specified as ?username=xxx'
-  return render_template('index.html', username=username)
+  return render_template('index.html')
 
 @app.route('/admin')
 def admin():

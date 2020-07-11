@@ -4,16 +4,16 @@ from flask_bootstrap import Bootstrap
 import logging, coloredlogs
 
 app = Flask(__name__)
-logging.basicConfig(level=logging.WARNING)
+logging.basicConfig(level=logging.INFO)
 coloredlogs.install()
 
 app.config.from_object(Config)
 Bootstrap(app)
 
-from app import routes, db
-import json
+from app import routes, db, auth
 
-with app.app_context():
-  model = db.get_model()
-  model.init_app(app)
+app.register_blueprint(auth.bp)
+
+model = db.get_model()
+model.init_app(app)
 

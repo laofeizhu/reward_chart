@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="container">
+  <div class="columns is-multiline">
+    <div class="column is-8 is-offset-2 register">
+      <div class="columns">
+        <div class="column left">
+          <h1 class="title is-1">Reward Chart</h1>
+          <h2 class="subtitle colored is-4">Awarding kids for good behaviors.</h2>
+          <p>Never worry about kids out of control. Login to reward chart today and get a bright path for your
+            beloved kids.</p>
+        </div>
+        <div class="column right has-text-centered">
+          <h1 class="title is-4">Parent login</h1>
+          <p class="description">{{ error }}</p>
+          <form method="POST">
+            <div class="field">
+              <div class="control">
+                <input name="username_or_email" class="input is-medium" type="text" placeholder="Username/Email" required>
+              </div>
+            </div>
+
+            <div class="field">
+              <div class="control">
+                <input name="password" class="input is-medium" type="text" placeholder="Password" required>
+              </div>
+            </div>
+
+            <button class="button is-block is-primary is-fullwidth is-medium">Login</button>
+            <br>
+            <small><em>Have a nice day.</em></small>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

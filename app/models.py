@@ -2,13 +2,7 @@ import json
 import time
 import uuid
 
-class JSONEncoder(json.JSONEncoder):
-
-  def default(self, obj):
-    if hasattr(obj, 'to_json'):
-      return obj.to_json()
-    else:
-      return json.JSONEncoder.default(self, obj)
+from app import app
 
 
 class Badge(object):
@@ -17,9 +11,6 @@ class Badge(object):
   def __init__(self, image_url=None, name=None):
     self.image_url = image_url
     self.name = name
-  
-  def to_json(self):
-    return dict(image_url=self.image_url, name=self.name)
 
 
 class Prize(Badge):
@@ -29,48 +20,49 @@ class Prize(Badge):
 class Score(object):
   """Score of a child"""
 
-  def __init__(self, timestamp=None, point=1, reason=None, badge=None, redeemed=False):
+  def __init__(self, timestamp=None, id=None, point=1, reason=None, badge=None, redeemed=False):
     self.timestamp = timestamp
     self.point = point
+    self.id = id
     self.reason = reason
     self.badge = badge
     self.redeemed = redeemed
 
-  def to_json(self):
-    return dict(timestamp=self.timestamp, point=self.point, reason=self.reason, badge=self.badge, redeemed=self.redeemed)
-
 
 class Timestamp(object):
 
-  def __init__(self, seconds=seconds, nanos=nanos):
+  def __init__(self, seconds=0, nanos=0):
     self.seconds = seconds
     self.nanos = nanos
-
-  def to_json(self):
-    return dict(seconds=self.seconds, nanos=self.nanos)
 
 
 class Child(object):
   """The child class"""
 
   def __init__(self, id=None, name=None, age=None, parents=[], scores=[], birthday=None, prizes=[], current_prize=None):
-    self.id = id
+    self.id = str(uuid.uuid1())
     self.name = name
-    self.age = age
     self.scores = scores
+    self.avatar_url = avatar_url
     self.parents = parents
-    self.birthday = birthday
     self.prizes = prizes
     self.current_prize = current_prize
 
 
-
 class User(object):
 
-  def __init__(self, name=None, id=None, password=None, avatar=None, children=[], badges=[]):
-    self.Name = name
-    self.id = id
+  def __init__(self, name=None, username=None, id=None, password=None, email=None, avatar_url=None, children_ids=[], badges=[]):
+    self.name = name
+    self.username = username
+    self.id = str(uuid.uuid1())
     self.password = password
-    self.avatar = avatar
-    self.children = children
+    self.avatar_url = avatar_url
+    self.email = email
+    self.children_ids = children_ids
+
+    # badges owned by the user
     self.badges = badges
+
+  @classmethod
+  def from_json(cls, user_json):
+    return User(**user_json)

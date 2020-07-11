@@ -2,6 +2,7 @@ import time
 
 from bson.objectid import ObjectId
 from flask_pymongo import PyMongo
+from app import models, app
 
 builtin_list = list
 
@@ -22,7 +23,7 @@ def from_mongo(data):
     if not data:
         return None
 
-    data['id'] = str(data['_id'])
+    data.pop('_id')
     return data
 # [END from_mongo]
 
@@ -53,3 +54,18 @@ def create(collection_name, score):
 
 def reset(collection_name):
   mongo.db[collection_name].drop()
+
+
+def register_user(user):
+  app.logger.info('adding user {} to db'.format(user))
+  mongo.db['users'].insert_one(user.__dict__)
+
+def get_user(username_or_email=None, id=None):
+  if id is not None:
+    results = mongo.db['users'].find({'id': id})
+  elif '@' in username_or_email:
+    results = mongo.db['users'].find({'email': username_or_email})
+  else:
+    results = mongo.db['users'].find({'username': username_or_email})
+  users_json = builtin_list(map(from_mongo, results))
+  return None if len(users_json) == 0 else models.User.from_json(users_json[0])
