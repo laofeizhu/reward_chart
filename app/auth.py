@@ -32,7 +32,7 @@ def register():
       model.register_user(user)
       session.clear()
       session['username'] = user.username
-      return redirect(url_for('auth.login'))
+      return redirect(url_for('family/user_console'))
 
     flash(error)
 
@@ -55,7 +55,7 @@ def login():
     if error is None:
       session.clear()
       session['username'] = user.username
-      return redirect(url_for('index'))
+      return redirect(url_for('family/user_console'))
 
     flash(error)
 

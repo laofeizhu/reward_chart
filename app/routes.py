@@ -3,13 +3,17 @@ import json
 from datetime import datetime, timedelta
 
 from app import app, db, models
-from app.forms import LoginForm
 from flask import render_template, jsonify, request, url_for, flash, redirect
 
 @app.route('/')
 @app.route('/index')
 def index():
   return render_template('index.html')
+
+@app.route('/file/<filename>')
+def file(filename):
+  model = db.get_model()
+  return model.send_file(filename)
 
 @app.route('/admin')
 def admin():

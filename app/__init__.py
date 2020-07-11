@@ -10,9 +10,10 @@ coloredlogs.install()
 app.config.from_object(Config)
 Bootstrap(app)
 
-from app import routes, db, auth
+from app import routes, db, auth, family
 
 app.register_blueprint(auth.bp)
+app.register_blueprint(family.bp)
 
 model = db.get_model()
 model.init_app(app)
