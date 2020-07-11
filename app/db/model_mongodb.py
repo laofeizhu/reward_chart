@@ -66,9 +66,7 @@ def register_user(user):
   app.logger.info('adding user {} to db'.format(user))
   mongo.db['users'].insert_one(user.__dict__)
 
-def register_child(child):
-  app.logger.info('adding child {} to db'.format(child))
-  mongo.db['children'].insert_one(child.__dict__)
+
 
 def get_user(username_or_email=None, id=None):
   if id is not None:
@@ -80,6 +78,10 @@ def get_user(username_or_email=None, id=None):
   users_json = builtin_list(map(from_mongo, results))
   return None if len(users_json) == 0 else models.User.from_json(users_json[0])
 
+def register_child(child):
+  mongo.db['children'].insert_one(child.__dict__)
+
+
 def add_child(user_id=None, child_id=None):
   mongo.db['users'].update({'id': user_id}, {'$push': {'children': child_id}})
 
@@ -87,3 +89,30 @@ def get_child(id=None):
   results = mongo.db['children'].find({'id': id})
   child_json = builtin_list(map(from_mongo, results))
   return None if len(child_json) == 0 else models.Child.from_json(child_json[0])
+
+
+def add_reward_to_user(user_id=None, reward_id=None):
+  app.logger.info('adding reward {} to user {}'.format(reward_id, user_id))
+  mongo.db['users'].update({'id': user_id}, {'$push': {'rewards': reward_id}})
+
+
+def register_reward(reward):
+  mongo.db['rewards'].insert_one(reward.__dict__)
+
+def get_reward(id=None):
+  results = mongo.db['rewards'].find({'id': id})
+  reward_json = builtin_list(map(from_mongo, results))
+  return None if len(reward_json) == 0 else models.Reward.from_json(reward_json[0])
+
+
+def register_badge(badge):
+  mongo.db['badges'].insert_one(badge.__dict__)
+
+def get_badge(id=None):
+  results = mongo.db['badges'].find({'id': id})
+  badge_json = builtin_list(map(from_mongo, results))
+  return None if len(badge_json) == 0 else models.Badge.from_json(badge_json[0])
+
+def add_badge_to_user(user_id=None, badge_id=None):
+  app.logger.info('adding badge {} to user {}'.format(badge_id, user_id))
+  mongo.db['users'].update({'id': user_id}, {'$push': {'badges': badge_id}})

@@ -10,8 +10,8 @@ from werkzeug.utils import secure_filename
 
 bp = Blueprint('family', __name__, url_prefix='/family')
 
-@bp.route('/user_console', methods=('GET', 'POST'))
-def user_console():
+@bp.route('/console', methods=('GET', 'POST'))
+def console():
   if session.get('username') is None:
     return redirect(url_for('auth.login'))
   children = []
@@ -42,7 +42,7 @@ def new_child():
       model.register_child(child)
       model.add_child(g.user.id, child.id)
       g.user = db.get_model().get_user(id=g.user.id)
-      return redirect(url_for('family.user_console'))
+      return redirect(url_for('family.console'))
 
     flash(error)
   return render_template('family/new_child.html')
