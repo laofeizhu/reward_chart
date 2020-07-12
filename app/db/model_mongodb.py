@@ -84,12 +84,16 @@ def register_child(child):
 
 def add_child(user_id=None, child_id=None):
   mongo.db['users'].update({'id': user_id}, {'$push': {'children': child_id}})
+  mongo.db['children'].update({'id': child_id}, {'$push': {'parents': user_id}})
 
 def get_child(id=None):
   results = mongo.db['children'].find({'id': id})
   child_json = builtin_list(map(from_mongo, results))
   return None if len(child_json) == 0 else models.Child.from_json(child_json[0])
 
+def get_child_score_count(id=None):
+  results = mongo.db['children'].find({'id': id})
+  return len(results[0]['scores'])
 
 def add_reward_to_user(user_id=None, reward_id=None):
   app.logger.info('adding reward {} to user {}'.format(reward_id, user_id))
@@ -116,3 +120,14 @@ def get_badge(id=None):
 def add_badge_to_user(user_id=None, badge_id=None):
   app.logger.info('adding badge {} to user {}'.format(badge_id, user_id))
   mongo.db['users'].update({'id': user_id}, {'$push': {'badges': badge_id}})
+
+
+def add_score(score=None, child_id=None):
+  mongo.db['scores'].insert_one(score.__dict__)
+  mongo.db['children'].update({'id': child_id}, {'$push': {'scores': score.id}})
+
+
+def get_score(id=None):
+  results = mongo.db['scores'].find({'id': id})
+  score_json = builtin_list(map(from_mongo, results))
+  return None if len(score_json) == 0 else models.Score.from_json(score_json[0])

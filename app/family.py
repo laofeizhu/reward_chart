@@ -4,13 +4,13 @@ import uuid
 from app import db, models, app
 
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, session, url_for
+    Blueprint, jsonify, flash, g, redirect, render_template, request, session, url_for
 )
 from werkzeug.utils import secure_filename
 
 bp = Blueprint('family', __name__, url_prefix='/family')
 
-@bp.route('/console', methods=('GET', 'POST'))
+@bp.route('/console', methods=['GET', 'POST'])
 def console():
   if session.get('username') is None:
     return redirect(url_for('auth.login'))
@@ -20,7 +20,7 @@ def console():
     children.append(model.get_child(child_id))
   return render_template('family/console.html', children=children)
 
-@bp.route('/new_child', methods=('GET', 'POST'))
+@bp.route('/new_child', methods=['GET', 'POST'])
 def new_child():
   if request.method == 'POST':
     name = request.form['name']
@@ -46,3 +46,16 @@ def new_child():
 
     flash(error)
   return render_template('family/new_child.html')
+
+@bp.route('/reward_chart/<id>', methods=['GET'])
+def reward_chart(id):
+  model = db.get_model()
+  child = model.get_child(id)
+  return render_template('family/reward_chart.html', child=child)
+
+@bp.route('/_child_score_count', methods=['GET'])
+def _child_score_count():
+  model = db.get_model()
+  child_id = request.args.get('child_id')
+  child_score_count = model.get_child_score_count(child_id)
+  return jsonify(child_score_count)

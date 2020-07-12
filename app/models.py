@@ -39,6 +39,7 @@ class Score(object):
     """Score of a child"""
 
     def __init__(self, timestamp=None, id=None, point=1, reason=None, badge=None, redeemed=False):
+        # timestamp is in utc sec
         self.timestamp = timestamp
         self.point = point
         self.id = id if id is not None else str(uuid.uuid1())
@@ -50,14 +51,6 @@ class Score(object):
     @classmethod
     def from_json(cls, score_json):
         return Score(**score_json)
-
-
-class Timestamp(object):
-
-    def __init__(self, seconds=0, nanos=0):
-        self.seconds = seconds
-        self.nanos = nanos
-
 
 class Child(object):
     """The child class"""

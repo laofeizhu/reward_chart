@@ -68,7 +68,6 @@ def load_logged_in_user():
         g.user = None
     else:
         g.user = db.get_model().get_user(username_or_email=username)
-        app.logger.info('g.user is {}'.format(g.user))
 
 @bp.route('/logout')
 def logout():

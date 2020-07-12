@@ -4,7 +4,7 @@ import uuid
 from app import db, models, app
 
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, session, url_for
+    Blueprint, jsonify, flash, g, redirect, render_template, request, session, url_for
 )
 from werkzeug.utils import secure_filename
 
@@ -20,7 +20,7 @@ def console():
     badges.append(model.get_badge(badge_id))
   return render_template('badge/console.html', badges=badges)
 
-@bp.route('/new_badge', methods=('GET', 'POST'))
+@bp.route('/new_badge', methods=['GET', 'POST'])
 def new_badge():
   if request.method == 'POST':
     name = request.form['name']
@@ -45,3 +45,50 @@ def new_badge():
 
     flash(error)
   return render_template('badge/new_badge.html')
+
+@bp.route('/_get_badges_for_child/<child_id>')
+def _get_bages_for_child(child_id):
+  model = db.get_model()
+  parent_ids = model.get_child(child_id).parents
+  badge_ids = {}
+  badges = []
+  for parent_id in parent_ids:
+    parent = model.get_user(id=parent_id)
+    tmp_badge_ids = parent.badges
+    for badge_id in tmp_badge_ids:
+      if badge_id not in badge_ids:
+        badge_ids[badge_id] = True
+  for badge_id in badge_ids:
+    badge = model.get_badge(badge_id)
+    badges.append({
+      'id': badge.id,
+      'image_url': badge.image_url
+    })
+  return jsonify(badges)
+
+@bp.route('/_score', methods=['GET', 'POST'])
+def _score():
+  model = db.get_model()
+  child_id = request.args.get('child_id')
+  badge_id = request.args.get('badge_id')
+  utc_sec = request.args.get('timestamp')
+  score = models.Score(badge=badge_id, timestamp=utc_sec)
+  model.add_score(score=score, child_id=child_id)
+  return 'score added'
+
+@bp.route('/_scores_later_than', methods=['GET'])
+def _scores_later_than():
+  model = db.get_model()
+  child_id = request.args.get('child_id')
+  utc_sec = request.args.get('timestamp')
+  child = model.get_child(id=child_id)
+  resp = []
+  for score_id in child.scores:
+    score = model.get_score(id=score_id)
+    if score.timestamp > utc_sec:
+      resp.append({
+        "id": score.id,
+        "timestamp": int(score.timestamp),
+        "image_url": model.get_badge(score.badge).image_url
+      })
+  return jsonify(resp)

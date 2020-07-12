@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+<section class="container">
+  <div class="columns">
+    <div class="column is-3">
+      <figure class="image is-128x128 is-square">
+        <img class="is-rounded" src="{{ url_for('file', filename=child.avatar_url) }}">
+      </figure>
+    </div>
+    <div class="column is-9">
+      <div class="box content" id="chart-body">
+      </div>
+      <div class="badges field is-grouped is-grouped-multiline">
+    </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block script %}
+{{ super() }}
+<script type="text/javascript">
+  $CHILD_ID = "{{ child.id }}"
+  $SCRIPT_ROOT = {{ request.script_root | tojson | safe }}
+</script>
+<script type="text/javascript" src="{{ url_for('static',filename='js/reward_chart.js') }}"></script>
+{% endblock %}
