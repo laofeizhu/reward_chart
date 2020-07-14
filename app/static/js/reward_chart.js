@@ -23,6 +23,7 @@ var stars
 var starsLeft
 
 function updateTime() {
+  let oldLastSundaySec = lastSundaySec
   lastSundaySec = nowSec - oneDay * now.getDay() - oneHour * now.getHours() - oneMin * now.getMinutes() - oneSec * now.getSeconds()
   for (var i = 0; i < 7; ++i) {
     var d = new Date(lastSundaySec + i * oneDay)
@@ -33,6 +34,9 @@ function updateTime() {
   }
 
   $('.chart-row').eq(now.getDay()).addClass('has-background-primary')
+  if (oldLastSundaySec !== lastSundaySec) {
+    updateScores()
+  }
 }
 
 // do a time update immediately
