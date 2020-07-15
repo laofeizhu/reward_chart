@@ -16,6 +16,9 @@
 <button id='add-sleep-star'>ADD SLEEP STAR</button>
 <br>
 <br>
+<button id='add-cleanup-star'>ADD CLEANUP STAR</button>
+<br>
+<br>
 <button id='reset-star'>RESET</button>
 {% endblock %}
 
@@ -45,6 +48,9 @@ $(function() {
 	})
 	$('#add-sleep-star').bind('click', function() {
 		$.post(getAddStarUrl('sleep'))
+	})
+	$('#add-cleanup-star').bind('click', function() {
+		$.post(getAddStarUrl('cleanup'))
 	})
 	$('#reset-star').bind('click', function() {
 		$.post($SCRIPT_ROOT + '/_reset_star?username=' + $USERNAME)
