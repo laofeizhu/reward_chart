@@ -16,7 +16,21 @@
       <div class="box content" id="chart-body">
       </div>
       <div class="badges field is-grouped is-grouped-multiline">
+        <p id='score-date'></p>
+      </div>
     </div>
+  </div>
+  <div class="modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Permanently remove this star?</p>
+        <button class="delete" aria-label="close" id='modal-close'></button>
+      </header>
+      <footer class="modal-card-foot">
+        <button class="button is-danger" id='confirm-removal'>Yes, remove</button>
+        <button class="button" id='cancel-removal'>Cancel</button>
+      </footer>
     </div>
   </div>
 </section>

@@ -131,3 +131,16 @@ def get_score(id=None):
   results = mongo.db['scores'].find({'id': id})
   score_json = builtin_list(map(from_mongo, results))
   return None if len(score_json) == 0 else models.Score.from_json(score_json[0])
+
+def delete_score(score_id=None, child_id=None):
+  mongo.db['scores'].delete_one({'id': score_id})
+  if child_id is not None:
+    mongo.db['children'].update(
+      {
+        'id': child_id
+      },
+      {
+      '$pull': {
+        'scores': score_id
+      }
+    })

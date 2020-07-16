@@ -92,3 +92,12 @@ def _scores_later_than():
         "image_url": model.get_badge(score.badge).image_url
       })
   return jsonify(resp)
+
+@bp.route('/_delete_score', methods=['POST'])
+def _delete_score():
+  model = db.get_model()
+  child_id = request.args.get('child_id')
+  score_id = request.args.get('score_id')
+  app.logger.info('deleting score %s for child %s' % (score_id, child_id))
+  model.delete_score(score_id=score_id, child_id=child_id)
+  return 'score deleted'
