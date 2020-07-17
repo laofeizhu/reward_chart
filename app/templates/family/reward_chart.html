@@ -13,19 +13,28 @@
       </figure>
     </div>
     <div class="column is-9">
-      <div class="box content" id="chart-body">
-      </div>
-      <div class="badges field is-grouped is-grouped-multiline">
-        <p id='score-date'></p>
+      <div class="card events-card">
+        <header class="card-header">
+          <p class="card-header-title">
+            Weekly Stars
+          </p>
+        </header>
+        <div class="card-table is-bordered">
+          <div class="content">
+            <table class="table is-fullwidth is-striped">
+              <tbody id="chart-body">
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-  <div class="modal">
+  <div class="modal" id="confirm-delete-star">
     <div class="modal-background"></div>
     <div class="modal-card">
       <header class="modal-card-head">
         <p class="modal-card-title">Permanently remove this star?</p>
-        <button class="delete" aria-label="close" id='modal-close'></button>
       </header>
       <footer class="modal-card-foot">
         <button class="button is-danger" id='confirm-removal'>Yes, remove</button>
@@ -33,6 +42,21 @@
       </footer>
     </div>
   </div>
+
+
+  <div class="modal" id="add-star">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title" id='score-date'></p>
+      </header>
+      <section class="modal-card-body">
+        <div class="level badges field is-grouped is-grouped-multiline"></div>
+      </section>
+      <footer class="modal-card-foot">
+        <button class="button" id='cancel-add'>Cancel</button>
+      </footer>
+    </div>
 </section>
 {% endblock %}
 

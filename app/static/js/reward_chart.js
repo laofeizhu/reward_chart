@@ -1,10 +1,8 @@
 const dayEntry = $(`
-<article class="media">
-  <h4 class="media-left chart-date"></h4>
-  <div class="media-content">
-    <div class="content score-box columns is-multiline is-gapless is-vcentered"></div>
-  </div>
-</article>
+<tr>
+<td width="5%"><h4 class="chart-date"></h4></td>
+<td><div class="level is-mobile"><div class="score-box level-left is-multiline "></div></div></td>
+</tr>
 `)
 
 
@@ -20,24 +18,36 @@ var lastSundayMs = null
 var day = null
 var addScoreMs = nowMs
 
-function showAddStarDate() {
+// Updates add star date on the modal
+function updateAddStarDate() {
   var d = new Date(addScoreMs)
-  $('#score-date').text('Adding star to ' + '(' + (d.getMonth() + 1) + '/' + d.getDate() + ') ' + DAYS[d.getDay()])
+  $('#score-date').text('Select to add a star to ' + '(' + (d.getMonth() + 1) + '/' + d.getDate() + ') ' + DAYS[d.getDay()])
 }
 
-showAddStarDate()
+function showAddStarModal() {
+  console.log('show add star modal')
+  $('#add-star').addClass("is-active")
+}
+
+function closeAddStarModal() {
+  $('#add-star').removeClass("is-active")
+}
+
+updateAddStarDate()
 
 var getClickCb = (i) => {
   return () => {
+    console.log('in click cb')
     addScoreMs = nowMs + (i - day) * oneDay
-    showAddStarDate()
+    updateAddStarDate()
+    showAddStarModal()
   }
 }
 
 for (var i = 0; i < 7; ++i) {
   var row = dayEntry.clone()
-  row.children('.chart-date').click(getClickCb(i))
   $('#chart-body').append(row)
+  $('.chart-date').eq(i).click(getClickCb(i))
 }
 
 function updateTime() {
@@ -73,24 +83,24 @@ setInterval(() => {
 
 
 $('#cancel-removal').click(() => {
-  $('.modal').removeClass("is-active")
+  $('#confirm-delete-star').removeClass("is-active")
 })
 
-$('#modal-close').click(() => {
-  $('.modal').removeClass("is-active")
+$('#cancel-add').click(() => {
+  closeAddStarModal()
 })
 
 $('#confirm-removal').click(() => {
   $.post(`${$SCRIPT_ROOT}/badge/_delete_score?score_id=${scoreToRemove.id}&child_id=${$CHILD_ID}`, ()=>{
     updateScores()
-    $('.modal').removeClass("is-active")
+    $('#confirm-delete-star').removeClass("is-active")
   })
 })
 
 function createBadgeEl(image_url) {
-  return $(`<div class="column is-narrow"><figure class="image is-64x64">
-  <img src=${$SCRIPT_ROOT}/file/${image_url}>
-</figure></div>`)
+  return $(`<div class="level-item is-narrow"><p class="image is-64x64">
+            <img src=${$SCRIPT_ROOT}/file/${image_url}>
+          </p></div>`)
 }
 
 var scoreToRemove = null
@@ -98,7 +108,7 @@ function createScoreEl(score) {
   var el = createBadgeEl(score.image_url)
   el.click(() => {
     scoreToRemove = score
-    $(".modal").addClass("is-active")
+    $("#confirm-delete-star").addClass("is-active")
   })
   return el
 }
@@ -109,7 +119,10 @@ function showBadgesToAdd() {
       var badgeEl = createBadgeEl(badge.image_url)
       badgeEl.click(() => {
         // add to earlier days if earlier days are selected
-        $.post(`${$SCRIPT_ROOT}/badge/_score?child_id=${$CHILD_ID}&badge_id=${badge.id}&timestamp=${addScoreMs}`, ()=>{ updateScores() })
+        $.post(`${$SCRIPT_ROOT}/badge/_score?child_id=${$CHILD_ID}&badge_id=${badge.id}&timestamp=${addScoreMs}`, ()=>{
+           updateScores()
+           closeAddStarModal()
+         })
       })
       $('.badges').append(badgeEl)
     }

@@ -55,14 +55,18 @@ class Score(object):
 class Child(object):
     """The child class"""
 
-    def __init__(self, id=None, name=None, avatar_url=None, age=None, parents=[], scores=[], birthday=None, rewards=[], current_reward=None):
+    def __init__(self, id=None, name=None, avatar_url=None, age=None, score_balance=0, parents=[], scores=[], birthday=None, rewards=[], redeemed_rewards=[], current_reward=None):
         self.id = id if id is not None else str(uuid.uuid1())
         self.name = name
+        # scores is the array of scores
         self.scores = scores
+        # score balance is like money, after spent, they are gone.
+        self.score_balance = score_balance
         self.avatar_url = avatar_url
         self.parents = parents
         self.rewards = rewards
         self.current_reward = current_reward
+        self.redeemed_rewards = redeemed_rewards
 
     @classmethod
     def from_json(cls, child_json):
