@@ -10,15 +10,15 @@ from werkzeug.utils import secure_filename
 
 bp = Blueprint('family', __name__, url_prefix='/family')
 
-@bp.route('/console', methods=['GET', 'POST'])
-def console():
+@bp.route('/index', methods=['GET', 'POST'])
+def index():
   if session.get('username') is None:
     return redirect(url_for('auth.login'))
   children = []
   model = db.get_model()
   for child_id in g.user.children:
     children.append(model.get_child(child_id))
-  return render_template('family/console.html', children=children)
+  return render_template('family/index.html', children=children)
 
 @bp.route('/new_child', methods=['GET', 'POST'])
 def new_child():
@@ -42,16 +42,10 @@ def new_child():
       model.register_child(child)
       model.add_child(g.user.id, child.id)
       g.user = db.get_model().get_user(id=g.user.id)
-      return redirect(url_for('family.console'))
+      return redirect(url_for('family.index'))
 
     flash(error)
   return render_template('family/new_child.html')
-
-@bp.route('/reward_chart/<id>', methods=['GET'])
-def reward_chart(id):
-  model = db.get_model()
-  child = model.get_child(id)
-  return render_template('family/reward_chart.html', child=child)
 
 @bp.route('/_child_score_count', methods=['GET'])
 def _child_score_count():
@@ -59,3 +53,23 @@ def _child_score_count():
   child_id = request.args.get('child_id')
   child_score_count = model.get_child_score_count(child_id)
   return jsonify(child_score_count)
+
+@bp.route('/_get_children', methods=['GET'])
+def _get_children():
+  model = db.get_model()
+  children = []
+  for child_id in g.user.children:
+    child = model.get_child(child_id)
+    children.append({
+      "id": child.id,
+      "avatar_url": child.avatar_url,
+      "name": child.name,
+    })
+  return jsonify(children)
+
+@bp.route('/_delete_child', methods=['POST'])
+def _delete_child():
+  model = db.get_model()
+  child_id = request.args.get('child_id')
+  model.delete_child(child_id=child_id, user_id=g.user.id)
+  return 'child removed from user'

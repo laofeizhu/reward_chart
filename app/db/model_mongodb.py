@@ -1,4 +1,5 @@
 import time
+import ssl
 
 from bson.objectid import ObjectId
 from flask_pymongo import PyMongo
@@ -31,7 +32,7 @@ def from_mongo(data):
 def init_app(app):
     global mongo
 
-    mongo = PyMongo(app)
+    mongo = PyMongo(app, ssl_cert_reqs=ssl.CERT_NONE)
     mongo.init_app(app)
 
 def send_file(filename):
@@ -144,3 +145,34 @@ def delete_score(score_id=None, child_id=None):
         'scores': score_id
       }
     })
+
+def delete_child(child_id=None, user_id=None):
+  mongo.db['users'].update(
+    {
+      'id': user_id
+    },
+    {
+      '$pull': {
+        'children': child_id
+      }
+    }
+  )
+  child = get_child(child_id)
+  if len(child.parents) != 1:
+    mongo.db['children'].update(
+      {
+        'id': child_id
+      },
+      {
+        '$pull': {
+          'parents': user_id
+        }
+      }
+    )
+  else:
+    # remove this orphan and their scores
+    for score_id in child.scores:
+      delete_score(score_id, child_id)
+  mongo.db['children'].delete_one({'id': child_id})
+    
+  

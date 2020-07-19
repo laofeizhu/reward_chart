@@ -37,7 +37,6 @@ updateAddStarDate()
 
 var getClickCb = (i) => {
   return () => {
-    console.log('in click cb')
     addScoreMs = nowMs + (i - day) * oneDay
     updateAddStarDate()
     showAddStarModal()

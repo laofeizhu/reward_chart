@@ -10,9 +10,10 @@ coloredlogs.install()
 app.config.from_object(Config)
 Bootstrap(app)
 
-from app import routes, db, auth, family, reward, badge, tutorial
+from app import routes, db, auth, family, reward, badge, tutorial, chart
 
 app.register_blueprint(auth.bp)
+app.register_blueprint(chart.bp)
 app.register_blueprint(family.bp)
 app.register_blueprint(reward.bp)
 app.register_blueprint(badge.bp)

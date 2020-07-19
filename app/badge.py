@@ -10,15 +10,15 @@ from werkzeug.utils import secure_filename
 
 bp = Blueprint('badge', __name__, url_prefix='/badge')
 
-@bp.route('/console', methods=('GET', 'POST'))
-def console():
+@bp.route('/index', methods=('GET', 'POST'))
+def index():
   if session.get('username') is None:
     return redirect(url_for('auth.login'))
   badges = []
   model = db.get_model()
   for badge_id in g.user.badges:
     badges.append(model.get_badge(badge_id))
-  return render_template('badge/console.html', badges=badges)
+  return render_template('badge/index.html', badges=badges)
 
 @bp.route('/new_badge', methods=['GET', 'POST'])
 def new_badge():
@@ -41,7 +41,7 @@ def new_badge():
       model.register_badge(badge)
       model.add_badge_to_user(g.user.id, badge.id)
       g.user = db.get_model().get_user(id=g.user.id)
-      return redirect(url_for('badge.console'))
+      return redirect(url_for('badge.index'))
 
     flash(error)
   return render_template('badge/new_badge.html')

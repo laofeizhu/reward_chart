@@ -10,8 +10,8 @@ from werkzeug.utils import secure_filename
 
 bp = Blueprint('reward', __name__, url_prefix='/reward')
 
-@bp.route('/console', methods=('GET', 'POST'))
-def console():
+@bp.route('/index', methods=('GET', 'POST'))
+def index():
   if session.get('username') is None:
     return redirect(url_for('auth.login'))
   rewards = []
@@ -19,7 +19,7 @@ def console():
   for reward_id in g.user.rewards:
     rewards.append(model.get_reward(reward_id))
   app.logger.info('rewards are {}'.format(rewards))
-  return render_template('reward/console.html', rewards=rewards)
+  return render_template('reward/index.html', rewards=rewards)
 
 @bp.route('/new_reward', methods=('GET', 'POST'))
 def new_reward():
@@ -42,7 +42,7 @@ def new_reward():
       model.register_reward(reward)
       model.add_reward_to_user(g.user.id, reward.id)
       g.user = db.get_model().get_user(id=g.user.id)
-      return redirect(url_for('reward.console'))
+      return redirect(url_for('reward.index'))
 
     flash(error)
   return render_template('reward/new_reward.html')

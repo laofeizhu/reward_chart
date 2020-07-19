@@ -30,6 +30,7 @@
       </div>
     </div>
   </div>
+
   <div class="modal" id="confirm-delete-star">
     <div class="modal-background"></div>
     <div class="modal-card">
@@ -66,5 +67,5 @@
   $CHILD_ID = "{{ child.id }}"
   $SCRIPT_ROOT = {{ request.script_root | tojson | safe }}
 </script>
-<script type="text/javascript" src="{{ url_for('static',filename='js/reward_chart.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static',filename='js/chart/chart.js') }}"></script>
 {% endblock %}
