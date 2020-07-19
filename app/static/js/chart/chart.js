@@ -24,8 +24,15 @@ function updateAddStarDate() {
   $('#score-date').text('Select to add a star to ' + '(' + (d.getMonth() + 1) + '/' + d.getDate() + ') ' + DAYS[d.getDay()])
 }
 
+function updateScoreBalance() {
+  $.get(`${$SCRIPT_ROOT}/family/_child_score_balance?child_id=${$CHILD_ID}`, (scoreBalance)=>{
+    $('#score-balance').text('Score Balance: ' + scoreBalance)
+  })
+}
+
+updateScoreBalance()
+
 function showAddStarModal() {
-  console.log('show add star modal')
   $('#add-star').addClass("is-active")
 }
 
@@ -52,8 +59,10 @@ for (var i = 0; i < 7; ++i) {
 function updateTime() {
   let oldlastSundayMs = lastSundayMs
   let oldDay = day
+  var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  var lastSunday = new Date(today.setDate(today.getDate()-today.getDay()));
   day = now.getDay()
-  lastSundayMs = nowMs - oneDay * now.getDay() - oneHour * now.getHours() - oneMin * now.getMinutes() - oneSec * now.getSeconds()
+  lastSundayMs = lastSunday.getTime()
   if (oldlastSundayMs != lastSundayMs) {
     for (var i = 0; i < 7; ++i) {
       var d = new Date(lastSundayMs + i * oneDay)
@@ -131,6 +140,7 @@ function showBadgesToAdd() {
 showBadgesToAdd()
 
 function updateScores() {
+  updateScoreBalance()
   $.get(`${$SCRIPT_ROOT}/badge/_scores_later_than?child_id=${$CHILD_ID}&timestamp=${lastSundayMs}`, (scores) => {
 
     var weeklyScores = []

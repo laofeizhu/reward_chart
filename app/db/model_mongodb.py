@@ -125,7 +125,13 @@ def add_badge_to_user(user_id=None, badge_id=None):
 
 def add_score(score=None, child_id=None):
   mongo.db['scores'].insert_one(score.__dict__)
-  mongo.db['children'].update({'id': child_id}, {'$push': {'scores': score.id}})
+  mongo.db['children'].update(
+    {'id': child_id},
+    {
+      '$push': {'scores': score.id},
+      '$inc': {'score_balance': 1}
+    },
+  )
 
 
 def get_score(id=None):
@@ -143,7 +149,8 @@ def delete_score(score_id=None, child_id=None):
       {
       '$pull': {
         'scores': score_id
-      }
+      },
+      '$inc': {'score_balance': -1}
     })
 
 def delete_child(child_id=None, user_id=None):

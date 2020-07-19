@@ -54,17 +54,20 @@ def _child_score_count():
   child_score_count = model.get_child_score_count(child_id)
   return jsonify(child_score_count)
 
+@bp.route('/_child_score_balance', methods=['GET'])
+def _child_score_balance():
+  model = db.get_model()
+  child_id = request.args.get('child_id')
+  child = model.get_child(child_id)
+  return jsonify(child.score_balance)
+
 @bp.route('/_get_children', methods=['GET'])
 def _get_children():
   model = db.get_model()
   children = []
   for child_id in g.user.children:
     child = model.get_child(child_id)
-    children.append({
-      "id": child.id,
-      "avatar_url": child.avatar_url,
-      "name": child.name,
-    })
+    children.append(child.__dict__)
   return jsonify(children)
 
 @bp.route('/_delete_child', methods=['POST'])

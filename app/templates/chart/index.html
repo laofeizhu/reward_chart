@@ -8,9 +8,16 @@
 <section class="container">
   <div class="columns">
     <div class="column is-3">
-      <figure class="image is-128x128 is-square">
-        <img class="is-rounded" src="{{ url_for('file', filename=child.avatar_url) }}">
-      </figure>
+      <aside class="is-medium menu">
+        <p class="menu-label" id="child-name">
+          {{ child.name }}
+        </p>
+        <figure class="image is-128x128 is-square">
+          <img class="is-rounded" src="{{ url_for('file', filename=child.avatar_url) }}">
+        </figure>
+        <p class="menu-label" id="score-balance">
+        </p>
+      </aside>
     </div>
     <div class="column is-9">
       <div class="card events-card">
