@@ -14,12 +14,15 @@ function createBadgeEl(badge) {
             </p>
           </div>
         </div>
-        <div class="media-right">
-          <button class="delete" id="delete-badge"></button>
-        </div>
       </article>
   `)
 }
+
+var deleteEl = $(`
+        <div class="media-right">
+          <button class="delete" id="delete-badge"></button>
+        </div>
+ `)
 
 var badgeToRemove
 var getDeleteBadgeCallback = (badgeId) => {
@@ -35,8 +38,11 @@ function listBadges() {
     console.log(badges)
     for (var badge of badges) {
       var badgeEl = createBadgeEl(badge)
+      if (badge.id.indexOf('default') == -1) {
+        badgeEl.append(deleteEl.clone())
+        badgeEl.find('#delete-badge').click(getDeleteBadgeCallback(badge.id))
+      }
       badgeListEl.append(badgeEl)
-      badgeEl.find('#delete-badge').click(getDeleteBadgeCallback(badge.id))
     }
   })
 }

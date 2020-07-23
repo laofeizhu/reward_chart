@@ -107,7 +107,7 @@ $('#confirm-removal').click(() => {
 
 function createBadgeEl(image_url) {
   return $(`<div class="level-item is-narrow"><p class="image is-64x64">
-            <img src=${$SCRIPT_ROOT}/file/${image_url}>
+            <img src=${$SCRIPT_ROOT}/${image_url}>
           </p></div>`)
 }
 

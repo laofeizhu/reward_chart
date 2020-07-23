@@ -32,7 +32,7 @@ def register():
       model.register_user(user)
       session.clear()
       session['username'] = user.username
-      return redirect(url_for('family.console'))
+      return redirect(url_for('family.index'))
 
     flash(error)
 

@@ -10,6 +10,24 @@ from werkzeug.utils import secure_filename
 
 bp = Blueprint('badge', __name__, url_prefix='/badge')
 
+star_badge = models.Badge(id='default-badge-star', image_url='static/images/star.png', name='Generic Star')
+brush_badge = models.Badge(id='default-badge-brush', image_url='static/images/brushteeth.png', name='Brush Teeth Star')
+sharing_badge = models.Badge(id='default-badge-sharing', image_url='static/images/sharing.png', name='Sharing Star')
+study_badge = models.Badge(id='default-badge-study', image_url='static/images/study.png', name='Study Star')
+sleep_badge = models.Badge(id='default-badge-sleep', image_url='static/images/sleep.png', name='Sleep Star')
+
+default_badges = [
+  star_badge.__dict__,
+  brush_badge.__dict__,
+  sharing_badge.__dict__,
+  study_badge.__dict__,
+  sleep_badge.__dict__,
+]
+
+default_badge_map = {
+  badge['id']: badge for badge in default_badges
+}
+
 @bp.route('/index', methods=('GET', 'POST'))
 def index():
   if session.get('username') is None:
@@ -51,13 +69,13 @@ def _get_bages_for_child(child_id):
   model = db.get_model()
   parent_ids = model.get_child(child_id).parents
   badge_ids = {}
-  badges = []
   for parent_id in parent_ids:
     parent = model.get_user(id=parent_id)
     tmp_badge_ids = parent.badges
     for badge_id in tmp_badge_ids:
       if badge_id not in badge_ids:
         badge_ids[badge_id] = True
+  badges = default_badges[:]
   for badge_id in badge_ids:
     badge = model.get_badge(badge_id)
     badges.append(badge.__dict__)
@@ -73,6 +91,11 @@ def _score():
   model.add_score(score=score, child_id=child_id)
   return 'score added'
 
+def get_image_url_for_badge(badge_id=None, db=None):
+  if badge_id.startswith('default'):
+    return default_badge_map[badge_id]['image_url']
+  return db.get_badge(badge_id).image_url
+
 @bp.route('/_scores_later_than', methods=['GET'])
 def _scores_later_than():
   model = db.get_model()
@@ -86,7 +109,7 @@ def _scores_later_than():
       resp.append({
         "id": score.id,
         "timestamp": int(score.timestamp),
-        "image_url": model.get_badge(score.badge).image_url
+        "image_url": get_image_url_for_badge(score.badge, model)
       })
   return jsonify(resp)
 
@@ -103,7 +126,7 @@ def _delete_score():
 def _get_badges():
   model = db.get_model()
   badge_ids = g.user.badges
-  badges = []
+  badges = default_badges[:]
   for badge_id in badge_ids:
     badge = model.get_badge(badge_id)
     badges.append(badge.__dict__)
