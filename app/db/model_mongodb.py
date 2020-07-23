@@ -153,6 +153,18 @@ def delete_score(score_id=None, child_id=None):
       '$inc': {'score_balance': -1}
     })
 
+def delete_badge(badge_id=None, user_id=None):
+  mongo.db['users'].update(
+    {
+      'id': user_id
+    },
+    {
+      '$pull': {
+        'badges': badge_id
+      }
+    }
+  )
+
 def delete_child(child_id=None, user_id=None):
   mongo.db['users'].update(
     {

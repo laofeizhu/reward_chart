@@ -28,18 +28,21 @@ function createChildEl(child) {
 
 var childToRemove
 
+var getDeleteChildCallback = (childId) => {
+  return () => {
+    childToRemove = childId
+    $('#confirm-delete-child').addClass("is-active")
+  }
+}
+
 function listChildren() {
   var childListEl = $("#child-list")
 
   $.get(`${$SCRIPT_ROOT}/family/_get_children`, (children) => {
-    console.log(children)
     for (var child of children) {
       var childEl = createChildEl(child)
       childListEl.append(childEl)
-      childEl.find('#delete-child').click(() => {
-        childToRemove = child.id
-        $('#confirm-delete-child').addClass("is-active")
-      })
+      childEl.find('#delete-child').click(getDeleteChildCallback(child.id))
     }
   })
 }

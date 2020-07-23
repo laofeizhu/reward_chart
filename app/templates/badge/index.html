@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<div class="container">
+  <div class="section">
+    <div id="badge-list">
+    </div>
+  </div>
+
+  <div class="columns">
+    <div class="column has-text-centered">
+      <a class="button is-primary is-block is-alt is-large" href="{{ url_for('badge.new_badge')}}">New Badge</a>
+    </div>
+  </div>
+  
+  <div class="modal" id="confirm-delete-badge">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Permanently remove this badge?</p>
+      </header>
+      <footer class="modal-card-foot">
+        <button class="button is-danger" id='confirm-removal'>Yes, remove</button>
+        <button class="button" id='cancel-removal'>Cancel</button>
+      </footer>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block script %}
+{{ super() }}
+<script type="text/javascript">
+  $USER_ID = "{{ g.user.id }}"
+  $SCRIPT_ROOT = {{ request.script_root | tojson | safe }}
+</script>
+<script type="text/javascript" src="{{ url_for('static',filename='js/badge/badge.js') }}"></script>
+{% endblock %}

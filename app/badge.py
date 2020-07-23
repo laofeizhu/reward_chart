@@ -37,7 +37,7 @@ def new_badge():
         badge_image = request.files['badge_image']
         filename = secure_filename(str(uuid.uuid1()))
         model.save_file(filename, badge_image)
-        badge.image_url = filename
+        badge.image_url = 'file/{}'.format(filename)
       model.register_badge(badge)
       model.add_badge_to_user(g.user.id, badge.id)
       g.user = db.get_model().get_user(id=g.user.id)
@@ -60,10 +60,7 @@ def _get_bages_for_child(child_id):
         badge_ids[badge_id] = True
   for badge_id in badge_ids:
     badge = model.get_badge(badge_id)
-    badges.append({
-      'id': badge.id,
-      'image_url': badge.image_url
-    })
+    badges.append(badge.__dict__)
   return jsonify(badges)
 
 @bp.route('/_score', methods=['GET', 'POST'])
@@ -101,3 +98,20 @@ def _delete_score():
   app.logger.info('deleting score %s for child %s' % (score_id, child_id))
   model.delete_score(score_id=score_id, child_id=child_id)
   return 'score deleted'
+
+@bp.route('/_get_badges', methods=['GET'])
+def _get_badges():
+  model = db.get_model()
+  badge_ids = g.user.badges
+  badges = []
+  for badge_id in badge_ids:
+    badge = model.get_badge(badge_id)
+    badges.append(badge.__dict__)
+  return jsonify(badges)
+
+@bp.route('/_delete_badge', methods=['POST'])
+def _delete_badge():
+  model = db.get_model()
+  badge_id = request.args.get('badge_id')
+  model.delete_badge(badge_id=badge_id, user_id=g.user.id)
+  return 'badge deleted'
