@@ -55,7 +55,7 @@ def login():
     if error is None:
       session.clear()
       session['username'] = user.username
-      return redirect(url_for('family.console'))
+      return redirect(url_for('family.index'))
 
     flash(error)
 

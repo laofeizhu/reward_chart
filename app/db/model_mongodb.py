@@ -100,6 +100,11 @@ def add_reward_to_user(user_id=None, reward_id=None):
   app.logger.info('adding reward {} to user {}'.format(reward_id, user_id))
   mongo.db['users'].update({'id': user_id}, {'$push': {'rewards': reward_id}})
 
+def get_current_reward(child_id=None):
+  child = get_child(id=child_id)
+  if child.current_reward is None:
+    return None
+  return get_reward(id=child.current_reward)
 
 def register_reward(reward):
   mongo.db['rewards'].insert_one(reward.__dict__)
@@ -109,6 +114,18 @@ def get_reward(id=None):
   reward_json = builtin_list(map(from_mongo, results))
   return None if len(reward_json) == 0 else models.Reward.from_json(reward_json[0])
 
+def delete_reward(reward_id=None, user_id=None):
+  mongo.db['rewards'].delete_one({'id': reward_id})
+  mongo.db['user'].update(
+    {
+      'id': user_id,
+    },
+    {
+      '$pull': {
+        'rewards': reward_id,
+      }
+    },
+  )
 
 def register_badge(badge):
   mongo.db['badges'].insert_one(badge.__dict__)

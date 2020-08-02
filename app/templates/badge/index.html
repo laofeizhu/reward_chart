@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 
-
 {% block content %}
 <div class="container">
   <div class="section">
@@ -31,9 +30,5 @@
 
 {% block script %}
 {{ super() }}
-<script type="text/javascript">
-  $USER_ID = "{{ g.user.id }}"
-  $SCRIPT_ROOT = {{ request.script_root | tojson | safe }}
-</script>
 <script type="text/javascript" src="{{ url_for('static',filename='js/badge/badge.js') }}"></script>
 {% endblock %}

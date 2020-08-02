@@ -76,3 +76,13 @@ def _delete_child():
   child_id = request.args.get('child_id')
   model.delete_child(child_id=child_id, user_id=g.user.id)
   return 'child removed from user'
+
+DEFAULT_REWARD = models.Reward(id='default-reward-ns', image_url='static/images/nintendoswitch.jpg', name='Nintendo Switch', score=50)
+@bp.route('/_current_reward', methods=['GET'])
+def _current_reward():
+  model = db.get_model()
+  child_id = request.args.get('child_id')
+  reward = model.get_current_reward(child_id)
+  if reward is None:
+    reward = DEFAULT_REWARD
+  return jsonify(reward.__dict__)

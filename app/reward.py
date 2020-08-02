@@ -4,7 +4,7 @@ import uuid
 from app import db, models, app
 
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, session, url_for
+    Blueprint, flash, g, redirect, render_template, request, session, url_for, jsonify
 )
 from werkzeug.utils import secure_filename
 
@@ -28,7 +28,7 @@ def new_reward():
     model = db.get_model()
     error = None
 
-    # TODO: verify that name is duplicated in user's rewardren list.
+    # TODO: verify that name is duplicated in user's rewards list.
     if not name:
       error = 'Name is required.'
 
@@ -38,7 +38,7 @@ def new_reward():
         reward_image = request.files['reward_image']
         filename = secure_filename(str(uuid.uuid1()))
         model.save_file(filename, reward_image)
-        reward.image_url = filename
+        reward.image_url = 'file/{}'.format(filename)
       model.register_reward(reward)
       model.add_reward_to_user(g.user.id, reward.id)
       g.user = db.get_model().get_user(id=g.user.id)
@@ -46,3 +46,20 @@ def new_reward():
 
     flash(error)
   return render_template('reward/new_reward.html')
+
+@bp.route('/_get_rewards', methods=['GET'])
+def _get_rewards():
+  model = db.get_model()
+  reward_ids = g.user.rewards
+  rewards = []
+  for reward_id in reward_ids:
+    reward = model.get_reward(reward_id)
+    rewards.append(reward.__dict__)
+  return jsonify(rewards)
+
+@bp.route('/_delete_reward', methods=['POST'])
+def _delete_reward():
+  model = db.get_model()
+  reward_id = request.args.get('reward_id')
+  model.delete_reward(reward_id=reward_id, user_id=g.user.id)
+  return 'reward deleted'

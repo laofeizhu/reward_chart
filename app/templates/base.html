@@ -24,4 +24,8 @@
 
 {% block script %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript">
+  $USER_ID = "{{ g.user.id }}"
+  $SCRIPT_ROOT = {{ request.script_root | tojson | safe }}
+</script>
 {% endblock %}

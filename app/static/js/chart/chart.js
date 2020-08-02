@@ -24,8 +24,11 @@ function updateAddStarDate() {
   $('#score-date').text('Select to add a star to ' + '(' + (d.getMonth() + 1) + '/' + d.getDate() + ') ' + DAYS[d.getDay()])
 }
 
+var scoreBalance = 0
 function updateScoreBalance() {
-  $.get(`${$SCRIPT_ROOT}/family/_child_score_balance?child_id=${$CHILD_ID}`, (scoreBalance)=>{
+  $.get(`${$SCRIPT_ROOT}/family/_child_score_balance?child_id=${$CHILD_ID}`, (score)=>{
+    scoreBalance = score
+    getAndShowReward()
     $('#score-balance').text('Score Balance: ' + scoreBalance)
   })
 }
@@ -174,3 +177,17 @@ function checkChildScoreCount() {
 setInterval(() => {
   checkChildScoreCount()
 }, 5000);
+
+var currentReward
+var rewardImageEl = $('#reward-image')
+var rewardProgressTextEl = $('#progress-text')
+var rewardProgressBarEl = $('#progress-bar')
+function getAndShowReward() {
+  $.get(`${$SCRIPT_ROOT}/family/_current_reward?child_id=${$CHILD_ID}`, (reward) => {
+    currentReward = reward
+    console.log(reward)
+    rewardImageEl.attr('src', `${$SCRIPT_ROOT}/${currentReward["image_url"]}`)
+    rewardProgressTextEl.text(`${scoreBalance}/${reward["score"]}`)
+    rewardProgressBarEl.attr('value', `${scoreBalance}`, 'max', `${reward["score"]}`)
+  })
+}
